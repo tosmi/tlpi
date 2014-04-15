@@ -1,6 +1,11 @@
-CC=GCC
+EXAMPLE=seek_io
 
-compile: %.co
+LIBDIR=../lib
+INCLUDEDIR=../lib
+CC=gcc
+CFLAGS=-g -Wall
 
-%.o: %.c
-	$(CC) -L../lib -I../lib
+libobjects := $(patsubst %.c,%.o,$(wildcard $(LIBDIR)/*.c))
+
+compile: $(libobjects)
+	$(CC) -o $(EXAMPLE) $(CFLAGS) -L$(LIBDIR) -I$(INCLUDEDIR) $(EXAMPLE).c $(libobjects)
