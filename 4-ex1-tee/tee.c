@@ -1,23 +1,43 @@
 #include <sys/stat.h>
-#include <tlpi_hdr.h>
+#include <fcntl.h>
+#include "tlpi_hdr.h"
 
 #define MAX_READ 1024
 
-int main(int argc, char *argv[])
+int openFile(int filename)
+{
+  int fd;
+
+  fd = open(STDIN_FILENO, O_RDONLY);
+  if (fd == -1)
+    errExit("open");
+
+  return fd;
+}
+
+int writeToFile(int fd, const char *buffer)
 {
 
+  if ( write(fd, buffer, MAX_READ+1) == -1)
+    fatal("could not write to output file");
+
+}
+
+int main(int argc, char *argv[])
+{
+  int outfd;
   char buffer[MAX_READ+1];
 
   if (argc < 1)
     usageErr("%s file", argv[0]);
 
-  /* fd = open(STDIN_FILENO, O_RDONLY); */
-  /* if (fd == -1) */
-  /*   errExit("open"); */
+  if (argc == 2)
+    outfd = openFile(&argv[1]);
 
   while( (read(STDIN_FILENO, buffer, MAX_READ)) > 0) {
     buffer[MAX_READ+1] = '\0';
     printf("%s", buffer);
+    writeToFile(buffer, outfd)
   }
 
   return 0;
