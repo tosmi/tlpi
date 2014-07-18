@@ -19,7 +19,8 @@ int openFile(char const *filename)
 
 int writeToFile(int fd, char const *buffer)
 {
-  if ( write(fd, buffer, sizeof(buffer)) == -1)
+  printf("size of buffer: %lu", sizeof(buffer));
+  if ( write(fd, buffer, sizeof(*buffer)) == -1)
     fatal("could not write to output file");
 
   return 0;
@@ -37,7 +38,7 @@ int main(int argc, char *argv[])
     outfd = openFile(argv[1]);
 
   while( (bytesread = read(STDIN_FILENO, buffer, MAX_READ)) > 0) {
-    buffer[MAX_READ+1] = '\0';
+    buffer[bytesread+1] = '\0';
     printf("%s", buffer);
     writeToFile(outfd, buffer);
   }
